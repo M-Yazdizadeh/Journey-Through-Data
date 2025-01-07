@@ -1,6 +1,6 @@
 # **MTL-Trajet Travel Mode Analysis**
 
-This repository explores travel modes using the **MTL-Trajet** dataset through supervised learning and clustering techniques, focusing on classification, clustering, and behavioral analysis.
+This repository contains data analysis, preprocessing, and machine learning workflows for classifying and analyzing travel modes using the **MTL-Trajet** dataset. The project focuses on applying supervised learning algorithms, neural networks, and clustering techniques to predict travel modes, extract meaningful insights, and explore natural groupings.
 
 ---
 
@@ -17,87 +17,120 @@ This repository explores travel modes using the **MTL-Trajet** dataset through s
 ---
 
 ## **Project Overview**
-This project leverages machine learning and clustering to predict travel modes and uncover patterns in multimodal travel data. Key challenges like missing data and class imbalance are addressed for robust analysis.
+This project leverages machine learning, deep learning, and clustering techniques to classify travel modes and uncover patterns using the **MTL-Trajet** dataset. The focus is on comparing model performances, improving accuracy, and exploring natural data clusters while addressing challenges such as class imbalance and missing data.
 
 ---
 
 ## **Dataset**
 - **Name**: MTL-Trajet Travel Dataset
-- **Source**: [MTL-Trajet Dataset](https://open.canada.ca/data/en/dataset/955de068-9556-4aa1-980e-487b057bbc9d)
-- **Description**: Contains travel data including trip purpose, travel modes, speed, and GPS coordinates.
+- **Source**: [Open Canada Dataset](https://open.canada.ca/data/en/dataset/955de068-9556-4aa1-980e-487b057bbc9d)
 - **Preprocessing**:
-  - Removed redundant columns (`id_trip`, `geometry`).
+  - Removed unnecessary columns (e.g., `id_trip`, `geometry`).
   - Handled missing values using imputation techniques.
-  - Encoded categorical features for compatibility with machine learning models.
+  - Encoded travel mode labels for consistency.
+  - Scaled numerical features for clustering and neural network models.
 
 ---
 
 ## **Key Features**
-- **Supervised Learning**:
-  - Models: Neural Networks, Random Forest, XGBoost
-  - Addressed class imbalance with **SMOTE**.
-- **Clustering Analysis**:
-  - **K-Means**: Behavioral clustering by speed and trip purpose.
-  - **DBSCAN**: Identifies density-based clusters and outliers.
-- **Dimensionality Reduction**:
-  - PCA highlights key contributors like travel mode, speed, and trip purpose.
+- Multimodal travel prediction using:
+  - Neural networks (PyTorch)
+  - Tree-based models (Decision Trees, Random Forests, XGBoost)
+- Clustering analysis using:
+  - **K-Means** for defining behavioral clusters.
+  - **DBSCAN** for identifying density-based patterns and outliers.
+- Addressing class imbalance with **SMOTE (Synthetic Minority Over-sampling Technique)**.
+- Hyperparameter optimization using **RandomizedSearchCV**.
+- Performance evaluation with detailed classification reports and visualizations.
 
 ---
 
 ## **Modeling Workflow**
 1. **Preprocessing**:
-   - Removed redundant features (e.g., `geometry`, `id_trip`).
-   - Imputed missing values using the mean (numeric) and most frequent (categorical).
-   - Encoded categorical variables with one-hot encoding.
-2. **Supervised Learning**:
-   - Trained models: PyTorch Neural Network, Random Forest, Gradient Boosting (XGBoost), and Decision Tree.
-   - Performed hyperparameter tuning using `GridSearchCV` and `RandomizedSearchCV`.
+   - Label encoding for categorical variables.
+   - Handling missing values using imputation.
+   - Feature scaling for neural networks and clustering analysis.
+2. **Training Models**:
+   - PyTorch Neural Network
+   - Decision Tree Classifier
+   - Random Forest Classifier
+   - Gradient Boosting (XGBoost)
 3. **Clustering Analysis**:
-   - Applied PCA to reduce data dimensions for visualization.
-   - Used **K-Means** and **DBSCAN** for cluster identification.
+   - K-Means clustering on PCA-reduced data.
+   - DBSCAN clustering for density-based group identification.
 4. **Evaluation**:
-   - Compared models using classification reports (accuracy, F1-score).
-   - Visualized clustering results using PCA-reduced dimensions.
+   - Classification reports for supervised models.
+   - Clustering visualization and detailed analysis of clusters.
 
 ---
 
 ## **Clustering Analysis**
-### **PCA Insights**
-- **PCA1**: Differentiates motorized trips by speed.
-- **PCA2**: Highlights public transport and work-related trips.
+### **PCA Overview**
+Principal Component Analysis (PCA) was applied to reduce the dataset dimensions for clustering. Two principal components (PCA1 and PCA2) were extracted, revealing the following patterns:
+- **PCA1**: Differentiates data based on travel speed and motorized travel modes (e.g., cars, motorcycles).
+- **PCA2**: Highlights public transport usage and work-related trip purposes.
 
-### **Results**
-- **K-Means**: 
-  - 3 clusters: Motorized trips, walking/cycling, and public transport.
-  - Clearly separates behavioral patterns.
-- **DBSCAN**: 
-  - Identifies natural clusters and outliers.
-  - Useful for analyzing unique travel behaviors and anomalies.
+#### **Top Features in PCA Loadings**
+- **PCA1**:
+  - `mode_Voiture / Moto` (Weight: 0.5445)
+  - `speed` (Weight: 0.4852)
+  - `purpose_Santé` (Weight: 0.1341)
+- **PCA2**:
+  - `purpose_Travail / Rendez-vous d'affaires` (Weight: 0.6970)
+  - `mode_Transport collectif` (Weight: 0.1496)
+
+### **K-Means Clustering Results**
+- **Clusters**:
+  - **Cluster 0**: High-speed trips using motorized vehicles, predominantly for leisure and health purposes.
+  - **Cluster 1**: Medium-speed trips involving walking or cycling, with a mix of purposes.
+  - **Cluster 2**: Work-related trips using public transport or multi-modal travel.
+- **Insights**:
+  - Clear separation of clusters based on speed, purpose, and travel mode.
+  - Effective for understanding behavioral patterns in multimodal travel.
+
+### **DBSCAN Clustering Results**
+- **Clusters**:
+  - **Cluster 0**: Majority of trips with routine travel patterns.
+  - **Cluster 1**: Smaller group of slower or geographically distinct trips.
+  - **Outliers (-1)**: Unique trips or anomalies with low density.
+- **Insights**:
+  - DBSCAN identified outliers and natural groupings in the data.
+  - Effective for capturing irregular travel patterns and unique behaviors.
 
 ---
 
 ## **Technologies Used**
 - **Languages**: Python
 - **Libraries**:
-  - Data Processing: `pandas`, `numpy`
-  - Machine Learning: `scikit-learn`, `torch`
+  - Data Processing: `pandas`, `numpy`, `scikit-learn`
+  - Machine Learning: `RandomForestClassifier`, `XGBClassifier`, `DecisionTreeClassifier`
+  - Deep Learning: `torch`, `torch.nn`, `torch.optim`
   - Clustering: `KMeans`, `DBSCAN`
   - Visualization: `matplotlib`, `seaborn`
 
 ---
 
 ## **Results and Insights**
-- **Best Supervised Model**: XGBoost achieved **97% accuracy**.
-- **K-Means**: Effectively captured behavioral trends in travel data.
-- **DBSCAN**: Identified anomalies and rare behaviors in the dataset.
+### **Supervised Learning Results**
+- **Best Model**: Gradient Boosting (XGBoost) achieved the highest accuracy of **97%**.
+- **Neural Network**: Moderately accurate (81%) but requires further optimization.
+- **Random Forest**: Robust performance (96%), generalizable for various travel patterns.
+
+### **Clustering Results**
+- **K-Means**:
+  - Effectively separated clusters based on travel speed, mode, and purpose.
+  - Provided actionable insights into user behavior for urban planning.
+- **DBSCAN**:
+  - Highlighted outliers and rare travel behaviors.
+  - Useful for identifying unique commuting patterns or data anomalies.
 
 ---
 
 ## **License**
-This project is licensed under the [MIT License](LICENSE). 
+This project is licensed under the [MIT License](LICENSE). You are free to use, modify, and distribute this code with proper attribution.
 
 ---
 
 ## **Contact**
-For inquiries, reach out to **Mohammad Yazdizadeh**:
+For questions or collaborations, please reach out to **Mohammad Yazdizadeh**:
 - **GitHub**: [M-Yazdizadeh](https://github.com/M-Yazdizadeh)
